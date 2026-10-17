@@ -254,15 +254,15 @@ function downloadImg(url){const a=document.createElement('a');a.href=url;a.downl
 // Key thakle real API call hobe, na thakle ager Demo output-i cholbe.
 const GROQ_MODEL='openai/gpt-oss-120b';
 const HF_MODEL='black-forest-labs/FLUX.1-schnell';
-const gkey=()=>((typeof CONFIG!=='undefined'&&CONFIG.GROQ_KEY)||'').trim();
+const gkey=()=>'server';
 const hkey=()=>((typeof CONFIG!=='undefined'&&CONFIG.HF_KEY)||'').trim();
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
 async function groq(system,user,json){
  const body={model:GROQ_MODEL,temperature:0.6,messages:[{role:'system',content:system},{role:'user',content:user}]};
  if(json)body.response_format={type:'json_object'};
- const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',
-  headers:{'Content-Type':'application/json','Authorization':'Bearer '+gkey()},body:JSON.stringify(body)});
+ const r=await fetch('/api/groq',{method:'POST',
+  headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
  if(!r.ok)throw new Error('Groq API error '+r.status);
  return (await r.json()).choices[0].message.content.trim();
 }
